@@ -1,21 +1,29 @@
 import api from '@/lib/axios';
-// import { Movie, MovieResponse } from '@/types/movie';
+import type {
+  Movie,
+  MovieListResponse,
+  SearchResponse,
+  MovieCredits,
+  MovieVideosResponse,
+} from '@/types/movie';
 
-// TODO: Create service functions to fetch data from TMDB API
-// Reference: https://developer.themoviedb.org/reference/intro/getting-started
+export const getPopularMovies = (page = 1): Promise<MovieListResponse> =>
+  api.get<MovieListResponse>('/movie/popular', { params: { page } }).then((r) => r.data);
 
-export const movieService = {
-  // TODO: Implement getPopularMovies function
-  // Endpoint: GET /movie/popular
+export const getNowPlayingMovies = (page = 1): Promise<MovieListResponse> =>
+  api.get<MovieListResponse>('/movie/now_playing', { params: { page } }).then((r) => r.data);
 
-  // TODO: Implement getNowPlayingMovies function
-  // Endpoint: GET /movie/now_playing
+export const searchMovies = (query: string, page = 1): Promise<SearchResponse> =>
+  api.get<SearchResponse>('/search/movie', { params: { query, page } }).then((r) => r.data);
 
-  // TODO: Implement getMovieDetails function
-  // Endpoint: GET /movie/{movie_id}
+export const getMovieDetails = (id: number): Promise<Movie> =>
+  api.get<Movie>(`/movie/${id}`).then((r) => r.data);
 
-  // TODO: Implement searchMovies function
-  // Endpoint: GET /search/movie
+export const getMovieCredits = (id: number): Promise<MovieCredits> =>
+  api.get<MovieCredits>(`/movie/${id}/credits`).then((r) => r.data);
 
-  // TODO: Add more endpoints as needed
-};
+export const getMovieVideos = (id: number): Promise<MovieVideosResponse> =>
+  api.get<MovieVideosResponse>(`/movie/${id}/videos`).then((r) => r.data);
+
+export const getSimilarMovies = (id: number, page = 1): Promise<MovieListResponse> =>
+  api.get<MovieListResponse>(`/movie/${id}/similar`, { params: { page } }).then((r) => r.data);

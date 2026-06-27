@@ -1,20 +1,27 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { TMDB_IMAGE_BASE } from './constants';
+import type { MovieSummary, SortOption } from '@/types/movie';
 
-// Utility function for merging Tailwind classes
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// TODO: Add utility functions for image URLs
-// Hint: TMDB returns relative paths, you need to construct full image URLs
-// Reference: https://developer.themoviedb.org/docs/image-basics
-
-export function getImageUrl(path: string, size: string = 'original'): string {
-  // TODO: Implement image URL construction
-  // Use VITE_TMDB_IMAGE_BASE_URL from environment variables
-  return '';
+export function getImageUrl(path: string, size = 'original'): string {
+  return `${TMDB_IMAGE_BASE}/${size}${path}`;
 }
 
-// TODO: Add more utility functions as needed
-// Examples: formatDate, formatRuntime, etc.
+export function sortMovies(movies: MovieSummary[], sort: SortOption): MovieSummary[] {
+  return [...movies].sort((a, b) => {
+    switch (sort) {
+      case 'rating':
+        return b.vote_average - a.vote_average;
+      case 'release_date':
+        return b.release_date.localeCompare(a.release_date);
+      case 'title':
+        return a.title.localeCompare(b.title);
+      default:
+        return 0;
+    }
+  });
+}
