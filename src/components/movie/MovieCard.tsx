@@ -8,9 +8,10 @@ import type { MovieSummary } from '@/types/movie';
 
 interface MovieCardProps {
   movie: MovieSummary;
+  className?: string;
 }
 
-const MovieCard = ({ movie }: MovieCardProps) => {
+const MovieCard = ({ movie, className }: MovieCardProps) => {
   const navigate = useNavigate();
   const { isSaved, addMovie, removeMovie } = useSavedStore();
   const saved = isSaved(movie.id);
@@ -39,8 +40,7 @@ const MovieCard = ({ movie }: MovieCardProps) => {
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
       onClick={() => navigate(`/movie/${movie.id}`)}
-      className="relative flex cursor-pointer flex-col"
-      style={{ width: 'var(--spacing-card-w)', height: 'var(--spacing-card-h)' }}
+      className={`relative flex shrink-0 cursor-pointer flex-col ${className ?? 'w-card-mobile-w h-card-mobile-h md:w-card-w md:h-card-h'}`}
     >
       <PosterImage
         posterPath={movie.poster_path}
