@@ -3,53 +3,163 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ─────────────────────────────────────────────
-   Figma Brand Design Tokens
-   Source: specs/001-movie-explorer-app/figma-design-specs.md
+   Figma Design System Tokens
+   Source: Figma node 10455:3156 (Typography)
    Desktop: 1440px | Mobile: 393px
    ───────────────────────────────────────────── */
 @theme {
-  /* Brand / primary action */
-  --color-brand:       #C0392B;
-  --color-brand-hover: #A93226;
-  --color-brand-muted: rgba(192, 57, 43, 0.15);
 
-  /* Figma neutral palette */
+  /* ─── Primary / Brand (Figma: primary/300 → primary/400 for hover) ─── */
+  --color-brand:       #961200;   /* primary/300 */
+  --color-brand-hover: #640c00;   /* primary/400 */
+  --color-brand-muted: rgba(150, 18, 0, 0.15);
+
+  /* ─── Figma Primary Palette ─── */
+  --color-primary-100: #ead0cc;
+  --color-primary-200: #b96155;
+  --color-primary-300: #961200;
+  --color-primary-400: #640c00;
+
+  /* ─── Figma Neutral Palette (complete, all 12 stops) ─── */
   --color-neutral-25:  #fdfdfd;
+  --color-neutral-50:  #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e9eaeb;
+  --color-neutral-300: #d5d7da;
+  --color-neutral-400: #a4a7ae;
   --color-neutral-500: #717680;
   --color-neutral-600: #535862;
+  --color-neutral-700: #414651;
   --color-neutral-800: #252b37;
+  --color-neutral-900: #181d27;
+  --color-neutral-950: #0a0d12;
 
-  /* App surface colors */
-  --color-surface:       #0A0D12;
+  /* ─── Base ─── */
+  --color-base-white: #ffffff;
+  --color-base-black: #000000;
+
+  /* ─── App Surface Colors ─── */
+  --color-surface:       #0a0d12;
   --color-surface-card:  #111318;
 
-  /* Typography — Poppins via Google Fonts */
+  /* ─── Star Rating Color ─── */
+  --color-star: #E4A802;
+
+  /* ─── Font Families ─── */
   --font-display: 'Poppins', sans-serif;
   --font-body:    'Poppins', sans-serif;
 
-  /* Desktop layout */
-  --spacing-page-x:   8.75rem;   /* 140px */
-  --spacing-content:  72.5rem;   /* 1160px */
+  /* ─────────────────────────────────────────────
+     Figma Typography Scale
+     Token format: --text-<name>           → text-<name>  (font-size + line-height paired)
+     Sizes: Display 3xl → Text xs (60px → 12px)
+     ───────────────────────────────────────────── */
 
-  /* Mobile layout */
-  --spacing-mobile-x: 1rem;      /* 16px */
+  /* Display 3xl  60px / 72px */
+  --text-display-3xl: 3.75rem;
+  --text-display-3xl--line-height: 4.5rem;
 
-  /* Movie card — desktop */
-  --spacing-card-w:   13.5rem;   /* 216px */
-  --spacing-card-h:   24.8125rem; /* 397px */
+  /* Display 2xl  48px / 60px  letter-spacing: -2% */
+  --text-display-2xl: 3rem;
+  --text-display-2xl--line-height: 3.75rem;
+  --text-display-2xl--letter-spacing: -0.02em;
 
-  /* Movie card — mobile */
-  --spacing-card-mobile-w: 10.8125rem; /* 173px */
-  --spacing-card-mobile-h: 20.875rem;  /* 334px */
+  /* Display xl   40px / 56px  letter-spacing: -2% */
+  --text-display-xl: 2.5rem;
+  --text-display-xl--line-height: 3.5rem;
+  --text-display-xl--letter-spacing: -0.02em;
 
-  /* Navbar heights */
-  --spacing-navbar-h:        5.625rem; /* 90px  desktop */
-  --spacing-navbar-mobile-h: 4rem;     /* 64px  mobile  */
+  /* Display lg   36px / 48px  letter-spacing: -2% */
+  --text-display-lg: 2.25rem;
+  --text-display-lg--line-height: 3rem;
+  --text-display-lg--letter-spacing: -0.02em;
 
-  /* Border radius */
-  --radius-pill:   9999px;
-  --radius-card:   0.5rem;   /* 8px  */
-  --radius-search: 1rem;     /* 16px – search bar */
+  /* Display md   32px / 46px  letter-spacing: -2% */
+  --text-display-md: 2rem;
+  --text-display-md--line-height: 2.875rem;
+  --text-display-md--letter-spacing: -0.02em;
+
+  /* Display sm   28px / 38px */
+  --text-display-sm: 1.75rem;
+  --text-display-sm--line-height: 2.375rem;
+
+  /* Display xs   24px / 36px */
+  --text-display-xs: 1.5rem;
+  --text-display-xs--line-height: 2.25rem;
+
+  /* Text xl      20px / 34px */
+  --text-text-xl: 1.25rem;
+  --text-text-xl--line-height: 2.125rem;
+
+  /* Text lg      18px / 32px */
+  --text-text-lg: 1.125rem;
+  --text-text-lg--line-height: 2rem;
+
+  /* Text md      16px / 30px */
+  --text-text-md: 1rem;
+  --text-text-md--line-height: 1.875rem;
+
+  /* Text sm      14px / 28px */
+  --text-text-sm: 0.875rem;
+  --text-text-sm--line-height: 1.75rem;
+
+  /* Text xs      12px / 24px */
+  --text-text-xs: 0.75rem;
+  --text-text-xs--line-height: 1.5rem;
+
+  /* ─────────────────────────────────────────────
+     Figma Spacing Scale
+     Token: --spacing-<name>  (matches Figma spacing tokens)
+     ───────────────────────────────────────────── */
+  --spacing-none: 0rem;
+  --spacing-xxs:  0.125rem;   /*   2px */
+  --spacing-xs:   0.25rem;    /*   4px */
+  --spacing-sm:   0.375rem;   /*   6px */
+  --spacing-md:   0.5rem;     /*   8px */
+  --spacing-lg:   0.75rem;    /*  12px */
+  --spacing-xl:   1rem;       /*  16px */
+  --spacing-2xl:  1.25rem;    /*  20px */
+  --spacing-3xl:  1.5rem;     /*  24px */
+  --spacing-4xl:  2rem;       /*  32px */
+  --spacing-5xl:  2.5rem;     /*  40px */
+  --spacing-6xl:  3rem;       /*  48px */
+  --spacing-7xl:  4rem;       /*  64px */
+  --spacing-8xl:  5rem;       /*  80px */
+  --spacing-9xl:  6rem;       /*  96px */
+  --spacing-10xl: 8rem;       /* 128px */
+  --spacing-11xl: 10rem;      /* 160px */
+
+  /* ─── App Layout Tokens ─── */
+  --spacing-page-x:        8.75rem;      /* 140px desktop side padding */
+  --spacing-content:       72.5rem;      /* 1160px max content width   */
+  --spacing-mobile-x:      1rem;         /*  16px mobile side padding  */
+
+  /* ─── Movie Card Dimensions ─── */
+  --spacing-card-w:        13.5rem;      /* 216px */
+  --spacing-card-h:        24.8125rem;   /* 397px */
+  --spacing-card-mobile-w: 10.8125rem;   /* 173px */
+  --spacing-card-mobile-h: 20.875rem;    /* 334px */
+
+  /* ─── Navbar Heights ─── */
+  --spacing-navbar-h:        5.625rem;   /*  90px desktop */
+  --spacing-navbar-mobile-h: 4rem;       /*  64px mobile  */
+
+  /* ─────────────────────────────────────────────
+     Figma Radius Scale (11 stops)
+     Source: Figma design system node 10458:4406
+     Confirmed: radius-xl=12px, radius-3xl=20px, radius-full=9999px
+     ───────────────────────────────────────────── */
+  --radius-none: 0px;
+  --radius-xxs:  0.125rem;   /*   2px */
+  --radius-xs:   0.25rem;    /*   4px */
+  --radius-sm:   0.375rem;   /*   6px */
+  --radius-md:   0.5rem;     /*   8px */
+  --radius-lg:   0.625rem;   /*  10px */
+  --radius-xl:   0.75rem;    /*  12px */
+  --radius-2xl:  1rem;       /*  16px */
+  --radius-3xl:  1.25rem;    /*  20px */
+  --radius-4xl:  1.5rem;     /*  24px */
+  --radius-full: 9999px;
 }
 
 /* ─────────────────────────────────────────────
@@ -81,10 +191,6 @@
   --color-chart-3:               var(--chart-3);
   --color-chart-4:               var(--chart-4);
   --color-chart-5:               var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
 }
 
 /* ─────────────────────────────────────────────
@@ -93,19 +199,19 @@
    ───────────────────────────────────────────── */
 :root {
   /* Page / layout surfaces */
-  --background:               #000000;   /* pure black page bg  */
-  --foreground:               #fdfdfd;   /* neutral-25          */
+  --background:               #0a0d12;   /* neutral-950 — Figma bg-primary */
+  --foreground:               #fdfdfd;   /* neutral-25                      */
 
   /* Card surfaces */
-  --card:                     #111318;   /* surface-card        */
+  --card:                     #111318;   /* surface-card */
   --card-foreground:          #fdfdfd;
 
   /* Popovers / dropdowns */
   --popover:                  #111318;
   --popover-foreground:       #fdfdfd;
 
-  /* Primary action = Figma brand red */
-  --primary:                  #C0392B;
+  /* Primary action = Figma primary/300 */
+  --primary:                  #961200;
   --primary-foreground:       #fdfdfd;
 
   /* Secondary surfaces */
@@ -114,10 +220,10 @@
 
   /* Muted text / subtle surfaces */
   --muted:                    #1a1f2e;
-  --muted-foreground:         #717680;   /* neutral-500         */
+  --muted-foreground:         #717680;   /* neutral-500 */
 
   /* Accent (hover highlights) */
-  --accent:                   #252b37;   /* neutral-800         */
+  --accent:                   #252b37;   /* neutral-800 */
   --accent-foreground:        #fdfdfd;
 
   /* Destructive */
@@ -125,9 +231,9 @@
   --destructive-foreground:   #fdfdfd;
 
   /* Borders / inputs */
-  --border:                   #252b37;   /* neutral-800         */
+  --border:                   #252b37;   /* neutral-800 */
   --input:                    #252b37;
-  --ring:                     #C0392B;   /* focus ring = brand  */
+  --ring:                     #961200;   /* focus ring = brand */
 
   /* Border radius base */
   --radius:                   0.5rem;

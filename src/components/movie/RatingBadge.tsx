@@ -7,8 +7,8 @@ interface RatingBadgeProps {
 
 const RatingBadge = ({ rating, className = '' }: RatingBadgeProps) => (
   <div className={`flex items-center gap-1 ${className}`}>
-    <Star className="h-3.5 w-3.5 fill-brand text-brand" />
-    <span className="text-xs font-semibold text-neutral-25">{rating.toFixed(1)}</span>
+    <Star className="h-6 w-6 fill-star text-star" />
+    <span className="text-text-lg font-medium text-neutral-25">{rating.toFixed(1)}</span>
   </div>
 );
 

@@ -38,7 +38,7 @@ const SearchBar = ({ onSearch, initialQuery = '' }: SearchBarProps) => {
     <div className="w-full">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div
-          className="flex h-14 w-full items-center gap-3 rounded-search border border-neutral-800 px-4 py-2"
+          className="flex h-14 w-full items-center gap-3 rounded-2xl border border-neutral-800 px-4 py-2"
           style={{ backdropFilter: 'blur(20px)', background: 'rgba(10,13,18,0.6)' }}
         >
           <Search className="h-6 w-6 shrink-0 text-neutral-500" />

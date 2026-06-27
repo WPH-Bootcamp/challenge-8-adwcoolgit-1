@@ -7,11 +7,16 @@ interface PosterImageProps {
   className?: string;
 }
 
-const PosterImage = ({ posterPath, title, size = 'w342', className = '' }: PosterImageProps) => {
+const PosterImage = ({
+  posterPath,
+  title,
+  size = 'w342',
+  className = '',
+}: PosterImageProps) => {
   if (!posterPath) {
     return (
       <div
-        className={`flex items-center justify-center rounded-card bg-neutral-800 text-neutral-500 text-xs text-center px-2 ${className}`}
+        className={`flex items-center justify-center rounded-xl bg-neutral-800 text-neutral-500 text-xs text-center px-2 ${className}`}
       >
         {title}
       </div>
@@ -22,8 +27,8 @@ const PosterImage = ({ posterPath, title, size = 'w342', className = '' }: Poste
     <img
       src={`${TMDB_IMAGE_BASE}/${size}${posterPath}`}
       alt={title}
-      className={`rounded-card object-cover ${className}`}
-      loading="lazy"
+      className={`rounded-xl object-cover ${className}`}
+      loading='lazy'
     />
   );
 };
