@@ -1,1 +1,161 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─────────────────────────────────────────────
+   Figma Brand Design Tokens
+   Source: specs/001-movie-explorer-app/figma-design-specs.md
+   Desktop: 1440px | Mobile: 393px
+   ───────────────────────────────────────────── */
+@theme {
+  /* Brand / primary action */
+  --color-brand:       #C0392B;
+  --color-brand-hover: #A93226;
+  --color-brand-muted: rgba(192, 57, 43, 0.15);
+
+  /* Figma neutral palette */
+  --color-neutral-25:  #fdfdfd;
+  --color-neutral-500: #717680;
+  --color-neutral-600: #535862;
+  --color-neutral-800: #252b37;
+
+  /* App surface colors */
+  --color-surface:       #0A0D12;
+  --color-surface-card:  #111318;
+
+  /* Typography — Poppins via Google Fonts */
+  --font-display: 'Poppins', sans-serif;
+  --font-body:    'Poppins', sans-serif;
+
+  /* Desktop layout */
+  --spacing-page-x:   8.75rem;   /* 140px */
+  --spacing-content:  72.5rem;   /* 1160px */
+
+  /* Mobile layout */
+  --spacing-mobile-x: 1rem;      /* 16px */
+
+  /* Movie card — desktop */
+  --spacing-card-w:   13.5rem;   /* 216px */
+  --spacing-card-h:   24.8125rem; /* 397px */
+
+  /* Movie card — mobile */
+  --spacing-card-mobile-w: 10.8125rem; /* 173px */
+  --spacing-card-mobile-h: 20.875rem;  /* 334px */
+
+  /* Navbar heights */
+  --spacing-navbar-h:        5.625rem; /* 90px  desktop */
+  --spacing-navbar-mobile-h: 4rem;     /* 64px  mobile  */
+
+  /* Border radius */
+  --radius-pill:   9999px;
+  --radius-card:   0.5rem;   /* 8px  */
+  --radius-search: 1rem;     /* 16px – search bar */
+}
+
+/* ─────────────────────────────────────────────
+   shadcn/ui semantic token mappings (Tailwind v4)
+   Allows: bg-background, text-foreground, etc.
+   ───────────────────────────────────────────── */
+@theme inline {
+  --color-background:            var(--background);
+  --color-foreground:            var(--foreground);
+  --color-card:                  var(--card);
+  --color-card-foreground:       var(--card-foreground);
+  --color-popover:               var(--popover);
+  --color-popover-foreground:    var(--popover-foreground);
+  --color-primary:               var(--primary);
+  --color-primary-foreground:    var(--primary-foreground);
+  --color-secondary:             var(--secondary);
+  --color-secondary-foreground:  var(--secondary-foreground);
+  --color-muted:                 var(--muted);
+  --color-muted-foreground:      var(--muted-foreground);
+  --color-accent:                var(--accent);
+  --color-accent-foreground:     var(--accent-foreground);
+  --color-destructive:           var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border:                var(--border);
+  --color-input:                 var(--input);
+  --color-ring:                  var(--ring);
+  --color-chart-1:               var(--chart-1);
+  --color-chart-2:               var(--chart-2);
+  --color-chart-3:               var(--chart-3);
+  --color-chart-4:               var(--chart-4);
+  --color-chart-5:               var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ─────────────────────────────────────────────
+   Dark theme — Figma design is dark-only.
+   :root IS the dark theme; no .dark toggle needed.
+   ───────────────────────────────────────────── */
+:root {
+  /* Page / layout surfaces */
+  --background:               #000000;   /* pure black page bg  */
+  --foreground:               #fdfdfd;   /* neutral-25          */
+
+  /* Card surfaces */
+  --card:                     #111318;   /* surface-card        */
+  --card-foreground:          #fdfdfd;
+
+  /* Popovers / dropdowns */
+  --popover:                  #111318;
+  --popover-foreground:       #fdfdfd;
+
+  /* Primary action = Figma brand red */
+  --primary:                  #C0392B;
+  --primary-foreground:       #fdfdfd;
+
+  /* Secondary surfaces */
+  --secondary:                #1a1f2e;
+  --secondary-foreground:     #fdfdfd;
+
+  /* Muted text / subtle surfaces */
+  --muted:                    #1a1f2e;
+  --muted-foreground:         #717680;   /* neutral-500         */
+
+  /* Accent (hover highlights) */
+  --accent:                   #252b37;   /* neutral-800         */
+  --accent-foreground:        #fdfdfd;
+
+  /* Destructive */
+  --destructive:              #ef4444;
+  --destructive-foreground:   #fdfdfd;
+
+  /* Borders / inputs */
+  --border:                   #252b37;   /* neutral-800         */
+  --input:                    #252b37;
+  --ring:                     #C0392B;   /* focus ring = brand  */
+
+  /* Border radius base */
+  --radius:                   0.5rem;
+
+  /* Charts (not used in this app but kept for shadcn compat) */
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6   0.118 184.714);
+  --chart-3: oklch(0.398 0.07  227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+}
+
+/* ─────────────────────────────────────────────
+   Base layer — global resets and body defaults
+   ───────────────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
