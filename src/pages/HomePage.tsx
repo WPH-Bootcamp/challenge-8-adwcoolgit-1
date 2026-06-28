@@ -1,18 +1,23 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import SearchBar from '@/components/movie/SearchBar';
 import MovieCard from '@/components/movie/MovieCard';
 import MovieCardSkeleton from '@/components/movie/MovieCardSkeleton';
 import MovieListItem from '@/components/movie/MovieListItem';
 import EmptySearchState from '@/components/movie/EmptySearchState';
+import FilterSortBar from '@/components/movie/FilterSortBar';
 import { usePopularMovies } from '@/hooks/usePopularMovies';
 import { useNowPlayingMovies } from '@/hooks/useNowPlayingMovies';
 import { useSearchMovies } from '@/hooks/useSearchMovies';
+import { sortMovies } from '@/lib/utils';
+import type { SortOption } from '@/types/movie';
 
 const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') ?? '';
+  const [sortOption, setSortOption] = useState<SortOption>('popularity');
 
   const handleSearch = (query: string) => {
     if (query) {
@@ -31,7 +36,10 @@ const HomePage = () => {
     hasNextPage: popularHasNext,
     isFetchingNextPage: popularFetchingNext,
   } = usePopularMovies();
-  const popularMovies = popularData?.pages.flatMap((p) => p.results) ?? [];
+  const popularMovies = sortMovies(
+    popularData?.pages.flatMap((p) => p.results) ?? [],
+    sortOption
+  );
 
   const {
     data: nowPlayingData,
@@ -42,8 +50,10 @@ const HomePage = () => {
     hasNextPage: nowPlayingHasNext,
     isFetchingNextPage: nowPlayingFetchingNext,
   } = useNowPlayingMovies();
-  const nowPlayingMovies =
-    nowPlayingData?.pages.flatMap((p) => p.results) ?? [];
+  const nowPlayingMovies = sortMovies(
+    nowPlayingData?.pages.flatMap((p) => p.results) ?? [],
+    sortOption
+  );
 
   const {
     data: searchData,
@@ -53,10 +63,19 @@ const HomePage = () => {
   const searchResults = searchData?.results ?? [];
 
   const trendingRef = useRef<HTMLDivElement>(null);
-  const scrollTrending = () => {
+  const [trendingScrolled, setTrendingScrolled] = useState(false);
+
+  const scrollTrending = (dir: 'left' | 'right') => {
     const isMobile = window.innerWidth < 768;
     const cardWidth = isMobile ? 173 + 16 : 216 + 20;
-    trendingRef.current?.scrollBy({ left: cardWidth, behavior: 'smooth' });
+    trendingRef.current?.scrollBy({
+      left: dir === 'right' ? cardWidth : -cardWidth,
+      behavior: 'smooth',
+    });
+  };
+
+  const handleTrendingScroll = () => {
+    setTrendingScrolled((trendingRef.current?.scrollLeft ?? 0) > 0);
   };
 
   return (
@@ -114,10 +133,12 @@ const HomePage = () => {
       {/* Trending Now + New Release — hidden when search is active (T040) */}
       {!searchQuery && (
         <>
+          <FilterSortBar value={sortOption} onSortChange={setSortOption} />
+
           {/* Trending Now
           Desktop: heading at section top, cards at y:88 (48px heading + 40px gap)
           Mobile:  heading at y:40 (pt-10), cards at y:100 (mb-6 = 24px gap) */}
-          <section className='pt-10 pb-10 md:pt-0 md:pb-20'>
+          <section className='isolate mx-auto w-full max-w-360 pt-10 pb-10 md:pt-0 md:pb-20'>
             <h2 className='mb-6 px-mobile-x text-2xl font-semibold text-neutral-25 md:mb-10 md:px-page-x md:text-5xl'>
               Trending Now
             </h2>
@@ -139,6 +160,7 @@ const HomePage = () => {
                 {/* Horizontal scroll row */}
                 <div
                   ref={trendingRef}
+                  onScroll={handleTrendingScroll}
                   className='flex gap-4 overflow-x-auto px-mobile-x pb-2 md:gap-5 md:px-page-x scrollbar-width:none [&::-webkit-scrollbar]:hidden'
                 >
                   {popularLoading
@@ -150,12 +172,26 @@ const HomePage = () => {
                       ))}
                 </div>
 
-                {/* Right fade gradient — desktop only, x:1010→x:1440 = 430px wide */}
-                <div className='pointer-events-none absolute inset-y-0 right-0 hidden w-107.5 bg-linear-to-l from-background to-transparent md:block' />
+                {/* Left fade gradient */}
+                <div className='pointer-events-none absolute inset-y-0 left-0 w-28 bg-linear-to-r from-background via-background/60 to-transparent md:w-120' />
 
-                {/* Arrow button — Figma: 56×56 desktop (right:61px), 44×44 mobile */}
+                {/* Right fade gradient */}
+                <div className='pointer-events-none absolute inset-y-0 right-0 w-28 bg-linear-to-l from-background via-background/60 to-transparent md:w-120' />
+
+                {/* Left arrow — visible only when scrolled */}
+                {trendingScrolled && (
+                  <button
+                    onClick={() => scrollTrending('left')}
+                    aria-label='Scroll left'
+                    className='absolute left-4 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-neutral-800 text-neutral-25 transition-colors hover:bg-neutral-700 md:left-15.25 md:h-14 md:w-14'
+                  >
+                    <ChevronLeft className='h-5 w-5 md:h-6 md:w-6' />
+                  </button>
+                )}
+
+                {/* Right arrow */}
                 <button
-                  onClick={scrollTrending}
+                  onClick={() => scrollTrending('right')}
                   aria-label='Scroll right'
                   className='absolute right-4 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-neutral-800 text-neutral-25 transition-colors hover:bg-neutral-700 md:right-15.25 md:h-14 md:w-14'
                 >
@@ -167,13 +203,15 @@ const HomePage = () => {
             {/* Trending Now — Load More */}
             {!popularLoading && !popularError && popularHasNext && (
               <div className='mt-6 flex justify-center'>
-                <button
+                <Button
+                  variant='outline'
+                  size='sm'
                   onClick={() => popularFetchNext()}
                   disabled={popularFetchingNext}
-                  className='h-11 w-50 rounded-full border border-neutral-800 text-sm font-medium text-neutral-25 transition-colors hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50 md:h-13 md:w-57.5'
+                  className='w-50 md:h-13 md:w-57.5'
                 >
                   {popularFetchingNext ? 'Loading…' : 'Load More'}
-                </button>
+                </Button>
               </div>
             )}
           </section>
@@ -200,7 +238,7 @@ const HomePage = () => {
               </div>
             ) : (
               <div className='px-mobile-x md:px-page-x'>
-                <div className='grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-5 md:gap-y-10'>
+                <div className='grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-5 md:gap-x-5 md:gap-y-10'>
                   {nowPlayingLoading
                     ? Array.from({ length: 10 }).map((_, i) => (
                         <MovieCardSkeleton key={i} />
@@ -219,13 +257,15 @@ const HomePage = () => {
             {/* New Release — Load More */}
             {!nowPlayingLoading && !nowPlayingError && nowPlayingHasNext && (
               <div className='mt-8 flex justify-center md:mt-10'>
-                <button
+                <Button
+                  variant='outline'
+                  size='sm'
                   onClick={() => nowPlayingFetchNext()}
                   disabled={nowPlayingFetchingNext}
-                  className='h-11 w-50 rounded-full border border-neutral-800 text-sm font-medium text-neutral-25 transition-colors hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50 md:h-13 md:w-57.5'
+                  className='w-50 md:h-13 md:w-57.5'
                 >
                   {nowPlayingFetchingNext ? 'Loading…' : 'Load More'}
-                </button>
+                </Button>
               </div>
             )}
           </section>

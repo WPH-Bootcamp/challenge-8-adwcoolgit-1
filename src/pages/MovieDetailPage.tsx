@@ -11,6 +11,7 @@ import { useMovieCertification } from '@/hooks/useMovieCertification';
 import { useSavedStore } from '@/store/savedStore';
 import PosterImage from '@/components/movie/PosterImage';
 import CastCard from '@/components/movie/CastCard';
+import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
 
 const formatDate = (dateStr: string) =>
@@ -45,6 +46,7 @@ const MovieDetailPage = () => {
         poster_path: movie.poster_path,
         vote_average: movie.vote_average,
         release_date: movie.release_date,
+        overview: movie.overview,
         savedAt: Date.now(),
       });
     }
@@ -142,16 +144,15 @@ const MovieDetailPage = () => {
                 {/* Buttons */}
                 <div className='flex items-center gap-4'>
                   {trailer && (
-                    <button
+                    <Button
+                      variant='primary'
+                      size='lg'
                       onClick={openTrailer}
-                      className='flex h-13 w-55 items-center justify-center gap-2 rounded-full bg-brand text-text-md font-semibold text-neutral-25 transition-colors hover:bg-brand-hover'
+                      className='w-55'
                     >
                       Watch Trailer
-                      <img
-                        src='/public/icons/play.svg'
-                        className='h-6 w-6 fill-current'
-                      />
-                    </button>
+                      <img src='/public/icons/play.svg' className='h-6 w-6' />
+                    </Button>
                   )}
                   <button
                     onClick={toggleSave}
@@ -215,16 +216,15 @@ const MovieDetailPage = () => {
               {/* Frame 30: Buttons */}
               <div className='flex items-start gap-4'>
                 {trailer && (
-                  <button
+                  <Button
+                    variant='primary'
+                    size='sm'
                     onClick={openTrailer}
-                    className='flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-brand text-sm font-semibold text-neutral-25 transition-colors hover:bg-brand-hover'
+                    className='flex-1'
                   >
                     Watch Trailer
-                    <img
-                      src='/public/icons/play.svg'
-                      className='h-5 w-5 fill-current'
-                    />
-                  </button>
+                    <img src='/public/icons/play.svg' className='h-5 w-5' />
+                  </Button>
                 )}
                 <button
                   onClick={toggleSave}

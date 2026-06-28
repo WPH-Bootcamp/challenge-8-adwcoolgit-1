@@ -1,14 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { Play, Heart, Star } from 'lucide-react';
 import PosterImage from './PosterImage';
+import { Button } from '@/components/ui/button';
 import { useSavedStore } from '@/store/savedStore';
 import type { MovieSummary } from '@/types/movie';
 
 interface MovieListItemProps {
   movie: MovieSummary;
+  sparation?: boolean;
 }
 
-const MovieListItem = ({ movie }: MovieListItemProps) => {
+const MovieListItem = ({ movie, sparation = false }: MovieListItemProps) => {
   const navigate = useNavigate();
   const { isSaved, addMovie, removeMovie } = useSavedStore();
   const saved = isSaved(movie.id);
@@ -26,13 +28,16 @@ const MovieListItem = ({ movie }: MovieListItemProps) => {
         poster_path: movie.poster_path,
         vote_average: movie.vote_average,
         release_date: movie.release_date,
+        overview: movie.overview,
         savedAt: Date.now(),
       });
     }
   };
 
   return (
-    <div className='flex flex-col border-b border-neutral-800 py-6 md:h67.5 md:flex-row md:items-start md:justify-between md:py-0'>
+    <div
+      className={`flex flex-col ${sparation ? 'border-b border-neutral-800' : ''}  md:h67.5 md:flex-row md:items-start md:justify-between py-8 md:py-12`}
+    >
       {/* Left section: poster + content */}
       <div className='flex gap-3 md:items-start md:gap-6'>
         {/* Poster: mobile 80×120, desktop 182×270, radius 12px */}
@@ -62,27 +67,29 @@ const MovieListItem = ({ movie }: MovieListItemProps) => {
             {/* Mobile: 14px star + compact text; Desktop: 24px star + "X.X/10" */}
             <div className='flex items-center gap-1'>
               <Star className='h-3.5 w-3.5 fill-star text-star md:h-6 md:w-6' />
-              <span className='text-xs font-semibold text-neutral-25 md:text-lg md:font-medium'>
+              <span className='text-xs font-semibold text-neutral-25 md:text-lg md:font-medium md:leading-8'>
                 {movie.vote_average.toFixed(1)}
                 <span className='hidden md:inline'>/10</span>
               </span>
             </div>
 
             {movie.overview && (
-              <p className='line-clamp-2 text-xs text-neutral-400 md:line-clamp-3 md:text-base md:leading-7.5'>
+              <p className='line-clamp-2 text-xs text-neutral-400 md:line-clamp-2 md:text-base md:leading-7.5'>
                 {movie.overview}
               </p>
             )}
           </div>
 
           {/* Watch Trailer — desktop only */}
-          <button
+          <Button
+            variant='primary'
+            size='lg'
             onClick={goToDetail}
-            className='hidden h-13 w-50 items-center justify-center gap-2 rounded-full bg-brand text-base font-semibold text-neutral-25 transition-colors hover:bg-brand-hover md:flex'
+            className='hidden w-50 md:flex'
           >
             Watch Trailer
-            <Play className='h-6 w-6 fill-current' />
-          </button>
+            <img src='/public/icons/play.svg' alt='play' className='h-6 w-6' />
+          </Button>
         </div>
       </div>
 
@@ -99,13 +106,15 @@ const MovieListItem = ({ movie }: MovieListItemProps) => {
 
       {/* Mobile Row 2: Watch Trailer + Heart */}
       <div className='mt-3 flex gap-3 md:hidden'>
-        <button
+        <Button
+          variant='primary'
+          size='sm'
           onClick={goToDetail}
-          className='flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-brand text-sm font-semibold text-neutral-25 transition-colors hover:bg-brand-hover'
+          className='flex-1'
         >
           <Play className='h-4 w-4 fill-current' />
           Watch Trailer
-        </button>
+        </Button>
         <button
           onClick={toggleSave}
           aria-label={saved ? 'Remove from saved' : 'Save movie'}
