@@ -5,6 +5,7 @@ import type {
   SearchResponse,
   MovieCredits,
   MovieVideosResponse,
+  MovieReleaseDatesResponse,
 } from '@/types/movie';
 
 export const getPopularMovies = (page = 1): Promise<MovieListResponse> =>
@@ -27,3 +28,9 @@ export const getMovieVideos = (id: number): Promise<MovieVideosResponse> =>
 
 export const getSimilarMovies = (id: number, page = 1): Promise<MovieListResponse> =>
   api.get<MovieListResponse>(`/movie/${id}/similar`, { params: { page } }).then((r) => r.data);
+
+export const getMovieCertification = async (id: number): Promise<string> => {
+  const { data } = await api.get<MovieReleaseDatesResponse>(`/movie/${id}/release_dates`);
+  const us = data.results.find((r) => r.iso_3166_1 === 'US');
+  return us?.release_dates.find((d) => d.certification)?.certification ?? 'NR';
+};

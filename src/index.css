@@ -39,7 +39,7 @@
   --color-base-black: #000000;
 
   /* ─── App Surface Colors ─── */
-  --color-surface:       #0a0d12;
+  --color-surface:       #000000;
   --color-surface-card:  #111318;
 
   /* ─── Star Rating Color ─── */
@@ -199,7 +199,7 @@
    ───────────────────────────────────────────── */
 :root {
   /* Page / layout surfaces */
-  --background:               #0a0d12;   /* neutral-950 — Figma bg-primary */
+  --background:               #000000;   /* Figma home page bg — pure black */
   --foreground:               #fdfdfd;   /* neutral-25                      */
 
   /* Card surfaces */

@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@iconify-react/hugeicons": "^1.0.8",
+    "@iconify-react/solar": "^1.0.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-label": "^2.1.1",
@@ -28,6 +30,7 @@
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-hook-form": "^7.54.2",
+    "react-image": "^4.1.0",
     "react-router-dom": "^7.6.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^4.3.0",

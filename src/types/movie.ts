@@ -84,7 +84,24 @@ export interface SavedMovie {
   poster_path: string | null;
   vote_average: number;
   release_date: string;
+  overview: string;
   savedAt: number;
 }
 
 export type SortOption = 'popularity' | 'rating' | 'release_date' | 'title';
+
+export interface ReleaseDateEntry {
+  certification: string;
+  release_date: string;
+  type: number;
+}
+
+export interface ReleaseDateResult {
+  iso_3166_1: string;
+  release_dates: ReleaseDateEntry[];
+}
+
+export interface MovieReleaseDatesResponse {
+  id: number;
+  results: ReleaseDateResult[];
+}
