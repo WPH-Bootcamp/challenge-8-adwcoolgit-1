@@ -41,77 +41,81 @@ export default function Navbar() {
   return (
     <>
       {/* Desktop Navbar */}
-      <header className='fixed inset-x-0 top-0 z-50 h-navbar-h px-page-x hidden md:flex items-center justify-between'>
-        <div className='flex items-end gap-20'>
-          <NavLink to='/' aria-label='Home'>
-            <Logo />
-          </NavLink>
-          <nav className='flex gap-12'>
-            <NavLink to='/' end className={navLinkClass}>
-              Home
+      <header className='fixed inset-x-0 top-0 z-50 hidden h-navbar-h md:flex items-center justify-center bg-transparent backdrop-blur-lg'>
+        <div className='flex w-full max-w-360 items-center justify-between px-page-x'>
+          <div className='flex items-end gap-20'>
+            <NavLink to='/' aria-label='Home'>
+              <Logo />
             </NavLink>
-            <NavLink to='/saved' className={navLinkClass}>
-              Saved
-            </NavLink>
-          </nav>
-        </div>
-
-        {/* Desktop Search */}
-        <form onSubmit={handleSearch}>
-          <div
-            className='flex h-14 w-60.75 items-center gap-3 rounded-[16px] border border-neutral-800 px-4 py-2'
-            style={{
-              backdropFilter: 'blur(20px)',
-              background: 'rgba(10,13,18,0.6)',
-            }}
-          >
-            <Search className='h-6 w-6 shrink-0 text-neutral-500' />
-            <input
-              type='text'
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder='Search Movie'
-              className='min-w-0 flex-1 bg-transparent text-sm text-neutral-25 placeholder:text-neutral-500 outline-none'
-            />
-            {query && (
-              <button
-                type='button'
-                onClick={clearSearch}
-                aria-label='Clear search'
-              >
-                <X className='h-4 w-4 text-neutral-500 hover:text-neutral-25' />
-              </button>
-            )}
+            <nav className='flex gap-12'>
+              <NavLink to='/' end className={navLinkClass}>
+                Home
+              </NavLink>
+              <NavLink to='/favourite' className={navLinkClass}>
+                Favourite
+              </NavLink>
+            </nav>
           </div>
-        </form>
+
+          {/* Desktop Search */}
+          <form onSubmit={handleSearch}>
+            <div
+              className='flex h-14 w-60.75 items-center gap-3 rounded-2xl border border-neutral-800 px-4 py-2'
+              style={{
+                backdropFilter: 'blur(20px)',
+                background: 'rgba(10,13,18,0.6)',
+              }}
+            >
+              <Search className='h-6 w-6 shrink-0 text-neutral-500' />
+              <input
+                type='text'
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder='Search Movie'
+                className='min-w-0 flex-1 bg-transparent text-sm text-neutral-25 placeholder:text-neutral-500 outline-none'
+              />
+              {query && (
+                <button
+                  type='button'
+                  onClick={clearSearch}
+                  aria-label='Clear search'
+                >
+                  <X className='h-4 w-4 text-neutral-500 hover:text-neutral-25' />
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
       </header>
 
       {/* Mobile Navbar */}
-      <header className='fixed inset-x-0 top-0 z-50 h-16 px-4 flex md:hidden items-center justify-between bg-[rgba(10,13,18,0.9)] backdrop-blur-[20px] border-b border-neutral-800'>
-        <NavLink to='/' aria-label='Home'>
-          <div className='flex items-center gap-1.5'>
-            <Tv className='h-7 w-7 text-brand' />
-            <span className='text-neutral-25 text-lg font-semibold tracking-[-0.5px]'>
-              Movie
-            </span>
-          </div>
-        </NavLink>
+      <header className='fixed inset-x-0 top-0 z-50 flex h-16 md:hidden items-center justify-center bg-transparent backdrop-blur-lg'>
+        <div className='flex w-full max-w-360 items-center justify-between px-4'>
+          <NavLink to='/' aria-label='Home'>
+            <div className='flex items-center gap-1.5'>
+              <Tv className='h-7 w-7 text-brand' />
+              <span className='text-neutral-25 text-lg font-semibold tracking-[-0.5px]'>
+                Movie
+              </span>
+            </div>
+          </NavLink>
 
-        <div className='flex items-center gap-4'>
-          <button
-            onClick={() => navigate('/?search=1')}
-            aria-label='Search'
-            className='text-neutral-500 hover:text-neutral-25'
-          >
-            <Search className='h-6 w-6' />
-          </button>
-          <button
-            onClick={() => setMobileOpen(true)}
-            aria-label='Open menu'
-            className='text-neutral-500 hover:text-neutral-25'
-          >
-            <Menu className='h-6 w-6' />
-          </button>
+          <div className='flex items-center gap-4'>
+            <button
+              onClick={() => navigate('/?search=1')}
+              aria-label='Search'
+              className='text-neutral-500 hover:text-neutral-25'
+            >
+              <Search className='h-6 w-6' />
+            </button>
+            <button
+              onClick={() => setMobileOpen(true)}
+              aria-label='Open menu'
+              className='text-neutral-500 hover:text-neutral-25'
+            >
+              <Menu className='h-6 w-6' />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -144,7 +148,7 @@ export default function Navbar() {
               Home
             </NavLink>
             <NavLink
-              to='/saved'
+              to='/favourite'
               onClick={() => setMobileOpen(false)}
               className={({ isActive }) =>
                 isActive
@@ -152,7 +156,7 @@ export default function Navbar() {
                   : 'text-neutral-500 hover:text-neutral-25'
               }
             >
-              Saved
+              Favourite
             </NavLink>
           </nav>
         </div>
