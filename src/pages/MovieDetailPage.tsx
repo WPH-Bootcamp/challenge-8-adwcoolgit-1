@@ -216,15 +216,16 @@ const MovieDetailPage = () => {
               {/* Frame 30: Buttons */}
               <div className='flex items-start gap-4'>
                 {trailer && (
-                  <Button
-                    variant='primary'
-                    size='sm'
+                  <button
                     onClick={openTrailer}
-                    className='flex-1'
+                    className='flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-brand text-sm font-semibold text-neutral-25 transition-colors hover:bg-brand-hover'
                   >
                     Watch Trailer
-                    <img src='/public/icons/play.svg' className='h-5 w-5' />
-                  </Button>
+                    <img
+                      src='/public/icons/play.svg'
+                      className='h-5 w-5 fill-current'
+                    />
+                  </button>
                 )}
                 <button
                   onClick={toggleSave}

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SearchBar from '@/components/movie/SearchBar';
@@ -7,18 +7,16 @@ import MovieCard from '@/components/movie/MovieCard';
 import MovieCardSkeleton from '@/components/movie/MovieCardSkeleton';
 import MovieListItem from '@/components/movie/MovieListItem';
 import EmptySearchState from '@/components/movie/EmptySearchState';
-import FilterSortBar from '@/components/movie/FilterSortBar';
 import { usePopularMovies } from '@/hooks/usePopularMovies';
 import { useNowPlayingMovies } from '@/hooks/useNowPlayingMovies';
 import { useSearchMovies } from '@/hooks/useSearchMovies';
-import { sortMovies } from '@/lib/utils';
-import type { SortOption } from '@/types/movie';
+import { useMovieVideos } from '@/hooks/useMovieVideos';
+import { TMDB_IMAGE_BASE } from '@/lib/constants';
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') ?? '';
-  const [sortOption, setSortOption] = useState<SortOption>('popularity');
-
   const handleSearch = (query: string) => {
     if (query) {
       setSearchParams({ q: query }, { replace: true });
@@ -32,14 +30,17 @@ const HomePage = () => {
     isLoading: popularLoading,
     isError: popularError,
     refetch: popularRefetch,
-    fetchNextPage: popularFetchNext,
-    hasNextPage: popularHasNext,
-    isFetchingNextPage: popularFetchingNext,
   } = usePopularMovies();
-  const popularMovies = sortMovies(
-    popularData?.pages.flatMap((p) => p.results) ?? [],
-    sortOption
-  );
+  const popularMovies = popularData?.pages.flatMap((p) => p.results) ?? [];
+  const featured = popularMovies[0];
+  const { data: heroVideosData } = useMovieVideos(featured?.id ?? 0);
+  const heroTrailer =
+    heroVideosData?.results.find(
+      (v) => v.type === 'Trailer' && v.site === 'YouTube' && v.official
+    ) ??
+    heroVideosData?.results.find(
+      (v) => v.type === 'Trailer' && v.site === 'YouTube'
+    );
 
   const {
     data: nowPlayingData,
@@ -50,10 +51,8 @@ const HomePage = () => {
     hasNextPage: nowPlayingHasNext,
     isFetchingNextPage: nowPlayingFetchingNext,
   } = useNowPlayingMovies();
-  const nowPlayingMovies = sortMovies(
-    nowPlayingData?.pages.flatMap((p) => p.results) ?? [],
-    sortOption
-  );
+  const nowPlayingMovies =
+    nowPlayingData?.pages.flatMap((p) => p.results) ?? [];
 
   const {
     data: searchData,
@@ -133,13 +132,72 @@ const HomePage = () => {
       {/* Trending Now + New Release — hidden when search is active (T040) */}
       {!searchQuery && (
         <>
-          <FilterSortBar value={sortOption} onSortChange={setSortOption} />
+          {/* Hero Section
+          Desktop: 810px full-width backdrop, content at top:298px left:140px
+          Mobile:  540px backdrop, content pinned to bottom */}
+          <section className='-mt-navbar-h relative h-[540px] overflow-hidden md:h-[810px]'>
+            {/* Backdrop */}
+            <div className='absolute inset-0'>
+              {popularLoading ? (
+                <div className='h-full w-full animate-pulse bg-neutral-900' />
+              ) : featured?.backdrop_path ? (
+                <img
+                  src={`${TMDB_IMAGE_BASE}/w1280${featured.backdrop_path}`}
+                  alt={featured?.title}
+                  className='h-full w-full object-cover object-top'
+                />
+              ) : (
+                <div className='h-full w-full bg-neutral-900' />
+              )}
+              <div className='absolute inset-0 bg-linear-to-b from-transparent to-black' />
+            </div>
+
+            {/* Content */}
+            {!popularLoading && featured && (
+              <div className='absolute bottom-10 left-0 right-0 flex flex-col gap-4 px-mobile-x md:bottom-auto md:left-[140px] md:right-auto md:top-[298px] md:w-[635px] md:gap-12 md:px-0'>
+                <div className='flex flex-col gap-2 md:gap-4'>
+                  <h1 className='text-2xl font-bold text-neutral-25 md:text-display-2xl'>
+                    {featured.title}
+                  </h1>
+                  <p className='line-clamp-3 text-sm text-neutral-400 md:text-text-md'>
+                    {featured.overview}
+                  </p>
+                </div>
+                <div className='flex items-center gap-4'>
+                  <Button
+                    variant='primary'
+                    size='lg'
+                    onClick={() =>
+                      heroTrailer
+                        ? window.open(
+                            `https://www.youtube.com/watch?v=${heroTrailer.key}`,
+                            '_blank'
+                          )
+                        : navigate(`/movie/${featured.id}`)
+                    }
+                    className='flex-1 md:w-[230px] md:flex-none'
+                  >
+                    Watch Trailer
+                    <img src='/icons/play.svg' alt='Play' className='h-6 w-6' />
+                  </Button>
+                  <Button
+                    variant='outline'
+                    size='lg'
+                    onClick={() => navigate(`/movie/${featured.id}`)}
+                    className='flex-1 border-neutral-900 bg-neutral-950/60 backdrop-blur-[20px] hover:bg-transparent hover:border-neutral-800 md:w-[230px] md:flex-none'
+                  >
+                    See Detail
+                  </Button>
+                </div>
+              </div>
+            )}
+          </section>
 
           {/* Trending Now
           Desktop: heading at section top, cards at y:88 (48px heading + 40px gap)
           Mobile:  heading at y:40 (pt-10), cards at y:100 (mb-6 = 24px gap) */}
           <section className='isolate mx-auto w-full max-w-360 pt-10 pb-10 md:pt-0 md:pb-20'>
-            <h2 className='mb-6 px-mobile-x text-2xl font-semibold text-neutral-25 md:mb-10 md:px-page-x md:text-5xl'>
+            <h2 className='mb-6 px-mobile-x text-2xl font-semibold text-neutral-25 md:mb-10 md:px-10  lg:px-page-x md:text-5xl'>
               Trending Now
             </h2>
 
@@ -180,37 +238,22 @@ const HomePage = () => {
 
                 {/* Left arrow — visible only when scrolled */}
                 {trendingScrolled && (
-                  <button
+                  <Button
                     onClick={() => scrollTrending('left')}
                     aria-label='Scroll left'
                     className='absolute left-4 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-neutral-800 text-neutral-25 transition-colors hover:bg-neutral-700 md:left-15.25 md:h-14 md:w-14'
                   >
                     <ChevronLeft className='h-5 w-5 md:h-6 md:w-6' />
-                  </button>
+                  </Button>
                 )}
 
                 {/* Right arrow */}
-                <button
+                <Button
                   onClick={() => scrollTrending('right')}
                   aria-label='Scroll right'
                   className='absolute right-4 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-neutral-800 text-neutral-25 transition-colors hover:bg-neutral-700 md:right-15.25 md:h-14 md:w-14'
                 >
                   <ChevronRight className='h-5 w-5 md:h-6 md:w-6' />
-                </button>
-              </div>
-            )}
-
-            {/* Trending Now — Load More */}
-            {!popularLoading && !popularError && popularHasNext && (
-              <div className='mt-6 flex justify-center'>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={() => popularFetchNext()}
-                  disabled={popularFetchingNext}
-                  className='w-50 md:h-13 md:w-57.5'
-                >
-                  {popularFetchingNext ? 'Loading…' : 'Load More'}
                 </Button>
               </div>
             )}
@@ -220,12 +263,12 @@ const HomePage = () => {
           Desktop: 5-col grid, gap-x:20px gap-y:40px
           Mobile:  2-col grid, gap-x:16px gap-y:32px */}
           <section className='pb-10 md:pb-20'>
-            <h2 className='mb-6 px-mobile-x text-2xl font-semibold text-neutral-25 md:mb-10 md:px-page-x md:text-5xl'>
+            <h2 className='mb-6 px-mobile-x text-2xl font-semibold text-neutral-25 md:mb-10 md:px-10 lg:px-page-x md:text-5xl'>
               New Release
             </h2>
 
             {nowPlayingError ? (
-              <div className='flex flex-col items-center gap-4 px-mobile-x py-10 md:px-page-x'>
+              <div className='flex flex-col items-center gap-4 px-mobile-x py-10 md:px-10 lg:px-page-x'>
                 <p className='text-sm text-neutral-500'>
                   Failed to load new releases.
                 </p>
@@ -237,7 +280,7 @@ const HomePage = () => {
                 </button>
               </div>
             ) : (
-              <div className='px-mobile-x md:px-page-x'>
+              <div className='px-mobile-x md:px-10  lg:px-page-x'>
                 <div className='grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-5 md:gap-x-5 md:gap-y-10'>
                   {nowPlayingLoading
                     ? Array.from({ length: 10 }).map((_, i) => (

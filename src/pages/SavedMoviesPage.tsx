@@ -21,11 +21,6 @@ const SavedMoviesPage = () => {
           <h1 className='text-display-xs font-bold tracking-[-0.02em] text-neutral-25 md:text-display-md'>
             Favourites
           </h1>
-          {savedMovies.length > 0 && (
-            <span className='flex h-7 min-w-7 items-center justify-center rounded-full bg-brand px-2 text-sm font-semibold text-neutral-25'>
-              {savedMovies.length}
-            </span>
-          )}
         </div>
 
         {/* ── Movies List / Empty State ── */}

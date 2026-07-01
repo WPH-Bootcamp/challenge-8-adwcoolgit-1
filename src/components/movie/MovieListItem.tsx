@@ -3,6 +3,7 @@ import { Play, Heart, Star } from 'lucide-react';
 import PosterImage from './PosterImage';
 import { Button } from '@/components/ui/button';
 import { useSavedStore } from '@/store/savedStore';
+import { useMovieVideos } from '@/hooks/useMovieVideos';
 import type { MovieSummary } from '@/types/movie';
 
 interface MovieListItemProps {
@@ -16,6 +17,24 @@ const MovieListItem = ({ movie, sparation = false }: MovieListItemProps) => {
   const saved = isSaved(movie.id);
 
   const goToDetail = () => navigate(`/movie/${movie.id}`);
+
+  const { data: videosData } = useMovieVideos(movie.id);
+  const trailer =
+    videosData?.results.find(
+      (v) => v.type === 'Trailer' && v.site === 'YouTube' && v.official
+    ) ??
+    videosData?.results.find(
+      (v) => v.type === 'Trailer' && v.site === 'YouTube'
+    );
+
+  const openTrailer = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (trailer) {
+      window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
+    } else {
+      goToDetail();
+    }
+  };
 
   const toggleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -43,7 +62,7 @@ const MovieListItem = ({ movie, sparation = false }: MovieListItemProps) => {
         {/* Poster: mobile 80×120, desktop 182×270, radius 12px */}
         <button
           onClick={goToDetail}
-          className='h-30 w-20 shrink-0 cursor-pointer overflow-hidden rounded-xl md:h-67.5 md:w-45.5'
+          className='h-30 w-20 shrink-0 overflow-hidden rounded-xl md:h-67.5 md:w-45.5'
         >
           <PosterImage
             posterPath={movie.poster_path}
@@ -84,7 +103,7 @@ const MovieListItem = ({ movie, sparation = false }: MovieListItemProps) => {
           <Button
             variant='primary'
             size='lg'
-            onClick={goToDetail}
+            onClick={openTrailer}
             className='hidden w-50 md:flex'
           >
             Watch Trailer
@@ -109,7 +128,7 @@ const MovieListItem = ({ movie, sparation = false }: MovieListItemProps) => {
         <Button
           variant='primary'
           size='sm'
-          onClick={goToDetail}
+          onClick={openTrailer}
           className='flex-1'
         >
           <Play className='h-4 w-4 fill-current' />

@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className='border-t border-neutral-800 bg-black'>
       {/* Desktop */}
-      <div className='hidden h-30 items-center justify-between px-page-x py-2 md:flex'>
+      <div className='hidden h-30 items-center justify-between px-4 md:px-10 lg:px-page-x py-2 md:flex'>
         <div className='flex items-center gap-[7.111px]'>
           <Tv className='h-10 w-10 text-brand' />
           <span

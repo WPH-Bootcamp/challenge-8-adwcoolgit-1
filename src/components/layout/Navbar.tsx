@@ -42,7 +42,7 @@ export default function Navbar() {
     <>
       {/* Desktop Navbar */}
       <header className='fixed inset-x-0 top-0 z-50 hidden h-navbar-h md:flex items-center justify-center bg-transparent backdrop-blur-lg'>
-        <div className='flex w-full max-w-360 items-center justify-between px-page-x'>
+        <div className='flex w-full max-w-360 items-center justify-between px-4 md:px-10 lg:px-page-x'>
           <div className='flex items-end gap-20'>
             <NavLink to='/' aria-label='Home'>
               <Logo />

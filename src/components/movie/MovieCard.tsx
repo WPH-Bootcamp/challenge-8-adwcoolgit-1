@@ -49,7 +49,7 @@ const MovieCard = ({ movie, id, className }: MovieCardProps) => {
           size='w342'
           className='h-full w-full'
         />
-        {id ? (
+        {id !== undefined ? (
           <button
             onClick={toggleSave}
             aria-label={saved ? 'Remove from saved' : 'Save movie'}
