@@ -7,16 +7,20 @@ import MovieCard from '@/components/movie/MovieCard';
 import MovieCardSkeleton from '@/components/movie/MovieCardSkeleton';
 import MovieListItem from '@/components/movie/MovieListItem';
 import EmptySearchState from '@/components/movie/EmptySearchState';
+import FilterSortBar from '@/components/movie/FilterSortBar';
 import { usePopularMovies } from '@/hooks/usePopularMovies';
 import { useNowPlayingMovies } from '@/hooks/useNowPlayingMovies';
 import { useSearchMovies } from '@/hooks/useSearchMovies';
 import { useMovieVideos } from '@/hooks/useMovieVideos';
 import { TMDB_IMAGE_BASE } from '@/lib/constants';
+import { sortMovies } from '@/lib/utils';
+import type { SortOption } from '@/types/movie';
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') ?? '';
+  const [sortOption, setSortOption] = useState<SortOption>('popularity');
 
   const {
     data: popularData,
@@ -24,7 +28,10 @@ const HomePage = () => {
     isError: popularError,
     refetch: popularRefetch,
   } = usePopularMovies();
-  const popularMovies = popularData?.pages.flatMap((p) => p.results) ?? [];
+  const popularMovies = sortMovies(
+    popularData?.pages.flatMap((p) => p.results) ?? [],
+    sortOption
+  );
   const featured = popularMovies[0];
   const { data: heroVideosData } = useMovieVideos(featured?.id ?? 0);
   const heroTrailer =
@@ -44,8 +51,10 @@ const HomePage = () => {
     hasNextPage: nowPlayingHasNext,
     isFetchingNextPage: nowPlayingFetchingNext,
   } = useNowPlayingMovies();
-  const nowPlayingMovies =
-    nowPlayingData?.pages.flatMap((p) => p.results) ?? [];
+  const nowPlayingMovies = sortMovies(
+    nowPlayingData?.pages.flatMap((p) => p.results) ?? [],
+    sortOption
+  );
 
   const {
     data: searchData,
@@ -200,6 +209,9 @@ const HomePage = () => {
               </div>
             )}
           </section>
+
+          {/* Filter/Sort Bar — hidden when search active */}
+          <FilterSortBar value={sortOption} onSortChange={setSortOption} />
 
           {/* Trending Now
           Desktop: heading at section top, cards at y:88 (48px heading + 40px gap)
