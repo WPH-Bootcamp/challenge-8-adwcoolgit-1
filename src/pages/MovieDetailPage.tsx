@@ -65,7 +65,13 @@ const MovieDetailPage = () => {
     window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
 
   return (
-    <div className='relative min-h-screen'>
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 20 }}
+      transition={{ duration: 0.3 }}
+      className='relative min-h-screen'
+    >
       {/* ── Hero: absolute, full width 16:9, stays behind content ── */}
       {!isError && (
         <div className='absolute inset-x-0 top-0 aspect-video w-full overflow-hidden'>
@@ -97,7 +103,7 @@ const MovieDetailPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className='relative z-10 flex flex-col gap-12 px-mobile-x pb-12 md:px-page-x'
+          className='relative z-10 flex flex-col gap-12 pb-12 px-mobile-x py-10 md:px-10 lg:px-page-x'
         >
           {/* ── Frame 47 / Frame 22: Movie Info ── */}
           <div className='mt-55.5 flex flex-col gap-4 md:mt-103'>
@@ -301,7 +307,7 @@ const MovieDetailPage = () => {
       )}
 
       {/* ── Cast Section ── */}
-      <section className='px-mobile-x pb-12 md:px-page-x'>
+      <section className='pb-12 px-mobile-x py-10 md:px-10 lg:px-page-x'>
         <h2 className='mb-6 text-display-xs font-bold tracking-[-0.02em] text-neutral-25 md:mb-8 md:text-display-md'>
           Top Cast
         </h2>
@@ -322,7 +328,7 @@ const MovieDetailPage = () => {
           </div>
         ) : null}
       </section>
-    </div>
+    </motion.div>
   );
 };
 

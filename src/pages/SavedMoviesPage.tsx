@@ -12,7 +12,7 @@ const SavedMoviesPage = () => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
       transition={{ duration: 0.3 }}
-      className='min-h-screen px-mobile-x pb-12 pt-24 md:px-page-x md:pt-38.5'
+      className='min-h-screen pb-12 pt-24 px-mobile-x py-10 md:px-10 lg:px-page-x md:pt-38.5'
     >
       {/* ── Frame 32: centred content column ── */}
       <div className='mx-auto flex w-full max-w-content flex-col'>
