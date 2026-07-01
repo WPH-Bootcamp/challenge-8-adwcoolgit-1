@@ -8,9 +8,12 @@ import { useMovieDetails } from '@/hooks/useMovieDetails';
 import { useMovieVideos } from '@/hooks/useMovieVideos';
 import { useMovieCredits } from '@/hooks/useMovieCredits';
 import { useMovieCertification } from '@/hooks/useMovieCertification';
+import { useSimilarMovies } from '@/hooks/useSimilarMovies';
 import { useSavedStore } from '@/store/savedStore';
 import PosterImage from '@/components/movie/PosterImage';
 import CastCard from '@/components/movie/CastCard';
+import MovieCard from '@/components/movie/MovieCard';
+import MovieCardSkeleton from '@/components/movie/MovieCardSkeleton';
 import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
 
@@ -21,6 +24,12 @@ const formatDate = (dateStr: string) =>
     year: 'numeric',
   });
 
+const formatRuntime = (mins: number) => {
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+};
+
 const MovieDetailPage = () => {
   const { id } = useParams();
   const movieId = Number(id);
@@ -30,6 +39,9 @@ const MovieDetailPage = () => {
   const { data: creditsData, isLoading: creditsLoading } =
     useMovieCredits(movieId);
   const topCast = creditsData?.cast.slice(0, 10) ?? [];
+  const { data: similarData, isLoading: similarLoading } =
+    useSimilarMovies(movieId);
+  const similarMovies = similarData?.results.slice(0, 10) ?? [];
   const { data: certification = 'NR' } = useMovieCertification(movieId);
   const { isSaved, addMovie, removeMovie } = useSavedStore();
 
@@ -119,7 +131,7 @@ const MovieDetailPage = () => {
                 />
               </div>
 
-              {/* Frame 19: mobile right col — title + date only */}
+              {/* Frame 19: mobile right col — title + date + runtime */}
               <div className='flex flex-1 flex-col gap-1 md:hidden'>
                 <h1 className='text-xl font-bold leading-8.5 text-neutral-25'>
                   {movie.title}
@@ -132,6 +144,11 @@ const MovieDetailPage = () => {
                     </span>
                   </div>
                 )}
+                {movie.runtime ? (
+                  <span className='text-sm text-neutral-400'>
+                    {formatRuntime(movie.runtime)}
+                  </span>
+                ) : null}
               </div>
 
               {/* Frame 20: desktop right col — full content */}
@@ -139,14 +156,21 @@ const MovieDetailPage = () => {
                 <h1 className='text-display-xl font-bold tracking-[-0.02em] text-neutral-25'>
                   {movie.title}
                 </h1>
-                {movie.release_date && (
-                  <div className='flex items-center gap-2'>
-                    <CalendarOutlineIcon className='h-6 w-6 shrink-0 text-white' />
-                    <span className='text-text-md text-white'>
-                      {formatDate(movie.release_date)}
+                <div className='flex flex-col gap-1'>
+                  {movie.release_date && (
+                    <div className='flex items-center gap-2'>
+                      <CalendarOutlineIcon className='h-6 w-6 shrink-0 text-white' />
+                      <span className='text-text-md text-white'>
+                        {formatDate(movie.release_date)}
+                      </span>
+                    </div>
+                  )}
+                  {movie.runtime ? (
+                    <span className='text-text-md text-neutral-400'>
+                      {formatRuntime(movie.runtime)}
                     </span>
-                  </div>
-                )}
+                  ) : null}
+                </div>
                 {/* Buttons */}
                 <div className='flex items-center gap-4'>
                   {trailer && (
@@ -327,6 +351,28 @@ const MovieDetailPage = () => {
             ))}
           </div>
         ) : null}
+      </section>
+
+      {/* ── Similar Movies Section ── */}
+      <section className='pb-16 px-mobile-x md:px-10 lg:px-page-x'>
+        <h2 className='mb-6 text-display-xs font-bold tracking-[-0.02em] text-neutral-25 md:mb-8 md:text-display-md'>
+          Similar Movies
+        </h2>
+        {similarLoading ? (
+          <div className='flex gap-4 overflow-hidden md:gap-5'>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <MovieCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : similarMovies.length > 0 ? (
+          <div className='flex gap-4 overflow-x-auto pb-2 md:gap-5 [&::-webkit-scrollbar]:hidden'>
+            {similarMovies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </div>
+        ) : (
+          <p className='text-sm text-neutral-500'>No recommendations available.</p>
+        )}
       </section>
     </motion.div>
   );
