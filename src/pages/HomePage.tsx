@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import SearchBar from '@/components/movie/SearchBar';
 import MovieCard from '@/components/movie/MovieCard';
 import MovieCardSkeleton from '@/components/movie/MovieCardSkeleton';
 import MovieListItem from '@/components/movie/MovieListItem';
@@ -15,15 +14,8 @@ import { TMDB_IMAGE_BASE } from '@/lib/constants';
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') ?? '';
-  const handleSearch = (query: string) => {
-    if (query) {
-      setSearchParams({ q: query }, { replace: true });
-    } else {
-      setSearchParams({}, { replace: true });
-    }
-  };
 
   const {
     data: popularData,
@@ -79,18 +71,7 @@ const HomePage = () => {
 
   return (
     <div className='min-h-screen pt-navbar-h'>
-      {/* Mobile search section — desktop uses the Navbar search */}
-      <section className='px-mobile-x py-4 md:hidden'>
-        <SearchBar
-          key={searchQuery}
-          onSearch={handleSearch}
-          initialQuery={searchQuery}
-        />
-      </section>
-
-      {/* Search Results — visible only when searchQuery is non-empty
-          Desktop: results start at y:154 → pt-16 (64px below navbar bottom)
-          Mobile:  appears below the SearchBar section */}
+      {/* Search Results */}
       {searchQuery && (
         <section className='px-mobile-x pt-4 pb-10 md:px-page-x md:pt-16 md:pb-20'>
           {searchLoading && (
@@ -129,13 +110,13 @@ const HomePage = () => {
         </section>
       )}
 
-      {/* Trending Now + New Release — hidden when search is active (T040) */}
+      {/* Trending Now + New Release — hidden when search is active */}
       {!searchQuery && (
         <>
           {/* Hero Section
           Desktop: 810px full-width backdrop, content at top:298px left:140px
           Mobile:  540px backdrop, content pinned to bottom */}
-          <section className='-mt-navbar-h relative h-[540px] overflow-hidden md:h-[810px]'>
+          <section className='-mt-navbar-h relative h-135 overflow-hidden md:h-202.5'>
             {/* Backdrop */}
             <div className='absolute inset-0'>
               {popularLoading ? (
@@ -154,7 +135,7 @@ const HomePage = () => {
 
             {/* Content */}
             {!popularLoading && featured && (
-              <div className='absolute bottom-10 left-0 right-0 flex flex-col gap-4 px-mobile-x md:bottom-auto md:left-[140px] md:right-auto md:top-[298px] md:w-[635px] md:gap-12 md:px-0'>
+              <div className='absolute bottom-10 left-0 right-0 flex flex-col gap-4 px-mobile-x md:bottom-auto md:left-x md:right-auto md:top-74.5 md:w-158.75 md:gap-12 md:px-0'>
                 <div className='flex flex-col gap-2 md:gap-4'>
                   <h1 className='text-2xl font-bold text-neutral-25 md:text-display-2xl'>
                     {featured.title}
@@ -164,27 +145,31 @@ const HomePage = () => {
                   </p>
                 </div>
                 <div className='flex items-center gap-4'>
-                  <Button
-                    variant='primary'
-                    size='lg'
-                    onClick={() =>
-                      heroTrailer
-                        ? window.open(
-                            `https://www.youtube.com/watch?v=${heroTrailer.key}`,
-                            '_blank'
-                          )
-                        : navigate(`/movie/${featured.id}`)
-                    }
-                    className='flex-1 md:w-[230px] md:flex-none'
-                  >
-                    Watch Trailer
-                    <img src='/icons/play.svg' alt='Play' className='h-6 w-6' />
-                  </Button>
+                  {heroTrailer && (
+                    <Button
+                      variant='primary'
+                      size='lg'
+                      onClick={() =>
+                        window.open(
+                          `https://www.youtube.com/watch?v=${heroTrailer.key}`,
+                          '_blank'
+                        )
+                      }
+                      className='flex-1 md:w-57.5 md:flex-none'
+                    >
+                      Watch Trailer
+                      <img
+                        src='/icons/play.svg'
+                        alt='Play'
+                        className='h-6 w-6'
+                      />
+                    </Button>
+                  )}
                   <Button
                     variant='outline'
                     size='lg'
                     onClick={() => navigate(`/movie/${featured.id}`)}
-                    className='flex-1 border-neutral-900 bg-neutral-950/60 backdrop-blur-[20px] hover:bg-transparent hover:border-neutral-800 md:w-[230px] md:flex-none'
+                    className='flex-1 border-neutral-900 bg-neutral-950/60 backdrop-blur-[20px] hover:bg-transparent hover:border-neutral-800 md:w-57.5 md:flex-none'
                   >
                     See Detail
                   </Button>
@@ -206,12 +191,14 @@ const HomePage = () => {
                 <p className='text-sm text-neutral-500'>
                   Failed to load trending movies.
                 </p>
-                <button
+                <Button
+                  variant='ghost'
+                  size='sm'
                   onClick={() => popularRefetch()}
-                  className='rounded-full bg-neutral-800 px-6 py-2.5 text-sm font-medium text-neutral-25 transition-colors hover:bg-neutral-700'
+                  className='bg-neutral-800 text-neutral-25 hover:bg-neutral-700'
                 >
                   Try again
-                </button>
+                </Button>
               </div>
             ) : (
               <div className='relative overflow-hidden'>
@@ -272,12 +259,14 @@ const HomePage = () => {
                 <p className='text-sm text-neutral-500'>
                   Failed to load new releases.
                 </p>
-                <button
+                <Button
+                  variant='ghost'
+                  size='sm'
                   onClick={() => nowPlayingRefetch()}
-                  className='rounded-full bg-neutral-800 px-6 py-2.5 text-sm font-medium text-neutral-25 transition-colors hover:bg-neutral-700'
+                  className='bg-neutral-800 text-neutral-25 hover:bg-neutral-700'
                 >
                   Try again
-                </button>
+                </Button>
               </div>
             ) : (
               <div className='px-mobile-x md:px-10  lg:px-page-x'>
