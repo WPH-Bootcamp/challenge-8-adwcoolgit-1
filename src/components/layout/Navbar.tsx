@@ -132,7 +132,7 @@ export default function Navbar() {
               <X className='h-6 w-6' />
             </button>
           </div>
-          <nav className='mt-12 flex flex-col gap-8 text-neutral-25 text-md font-regular'>
+          <nav className='mt-12 flex flex-col gap-8 text-neutral-25 text-md font-normal'>
             <NavLink
               to='/'
               end
