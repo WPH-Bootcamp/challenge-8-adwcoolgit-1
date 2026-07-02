@@ -14,6 +14,7 @@ import PosterImage from '@/components/movie/PosterImage';
 import CastCard from '@/components/movie/CastCard';
 import MovieCard from '@/components/movie/MovieCard';
 import MovieCardSkeleton from '@/components/movie/MovieCardSkeleton';
+import StatBox from '@/components/movie/StatBox';
 import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
 
@@ -156,7 +157,7 @@ const MovieDetailPage = () => {
                 <h1 className='text-display-xl font-bold tracking-[-0.02em] text-neutral-25'>
                   {movie.title}
                 </h1>
-                <div className='flex flex-col gap-1'>
+                <div className='flex flex-col md:flex-row gap-1'>
                   {movie.release_date && (
                     <div className='flex items-center gap-2'>
                       <CalendarOutlineIcon className='h-6 w-6 shrink-0 text-white' />
@@ -166,9 +167,14 @@ const MovieDetailPage = () => {
                     </div>
                   )}
                   {movie.runtime ? (
-                    <span className='text-text-md text-neutral-400'>
-                      {formatRuntime(movie.runtime)}
-                    </span>
+                    <>
+                      <span className='text-text-md hidden md:block text-white'>
+                        |
+                      </span>
+                      <span className='text-text-md text-neutral-400'>
+                        {formatRuntime(movie.runtime)}
+                      </span>
+                    </>
                   ) : null}
                 </div>
                 {/* Buttons */}
@@ -198,45 +204,33 @@ const MovieDetailPage = () => {
                 </div>
                 {/* Stat boxes */}
                 <div className='flex gap-5'>
-                  <div className='flex flex-1 flex-col items-center gap-2 rounded-2xl border border-neutral-800 bg-black p-5'>
-                    <StarBoldIcon className='h-8 w-8 fill-star text-star' />
-                    <div className='flex flex-col gap-0.5 text-center'>
-                      <span className='text-text-md text-neutral-300'>
-                        Rating
-                      </span>
-                      <span className='text-text-xl font-semibold text-neutral-25'>
-                        {movie.vote_average.toFixed(1)}/10
-                      </span>
-                    </div>
-                  </div>
-                  <div className='flex flex-1 flex-col items-center gap-2 rounded-2xl border border-neutral-800 bg-black p-5'>
-                    <img
-                      src='/public/icons/video.svg'
-                      className='h-8 w-8 p-0.75'
-                    />
-                    <div className='flex flex-col gap-0.5 text-center'>
-                      <span className='text-text-md text-neutral-300'>
-                        Genre
-                      </span>
-                      <span className='line-clamp-1 text-text-xl font-semibold text-neutral-25'>
-                        {movie.genres[0]?.name ?? '—'}
-                      </span>
-                    </div>
-                  </div>
-                  <div className='flex flex-1 flex-col items-center gap-2 rounded-2xl border border-neutral-800 bg-black p-5'>
-                    <img
-                      src='/public/icons/emoji.svg'
-                      className='h-8 w-8 p-0.75'
-                    />
-                    <div className='flex flex-col gap-0.5 text-center'>
-                      <span className='text-text-md text-neutral-300'>
-                        Age Limit
-                      </span>
-                      <span className='text-text-xl font-semibold text-neutral-25'>
-                        {certification}
-                      </span>
-                    </div>
-                  </div>
+                  <StatBox
+                    icon={
+                      <StarBoldIcon className='h-8 w-8 fill-star text-star' />
+                    }
+                    label='Rating'
+                    value={`${movie.vote_average.toFixed(1)}/10`}
+                  />
+                  <StatBox
+                    icon={
+                      <img
+                        src='/public/icons/video.svg'
+                        className='h-8 w-8 p-0.75'
+                      />
+                    }
+                    label='Genre'
+                    value={movie.genres[0]?.name ?? '—'}
+                  />
+                  <StatBox
+                    icon={
+                      <img
+                        src='/public/icons/emoji.svg'
+                        className='h-8 w-8 p-0.75'
+                      />
+                    }
+                    label='Age Limit'
+                    value={certification}
+                  />
                 </div>
               </div>
             </div>
@@ -273,45 +267,36 @@ const MovieDetailPage = () => {
               </div>
               {/* Frame 17: Stat boxes */}
               <div className='flex gap-2'>
-                <div className='flex flex-1 flex-col items-center gap-2 rounded-2xl border border-neutral-800 bg-black p-3'>
-                  <StarBoldIcon className='h-7 w-7 fill-star text-star' />
-                  <div className='flex flex-col gap-0.5 text-center'>
-                    <span className='text-xs leading-7.5 text-neutral-300'>
-                      Rating
-                    </span>
-                    <span className='text-sm font-semibold leading-8.5 text-neutral-25'>
-                      {movie.vote_average.toFixed(1)}/10
-                    </span>
-                  </div>
-                </div>
-                <div className='flex flex-1 flex-col items-center gap-2 rounded-2xl border border-neutral-800 bg-black p-3'>
-                  <img
-                    src='/public/icons/video.svg'
-                    className='h-7 w-7 p-0.75'
-                  />
-                  <div className='flex flex-col gap-0.5 text-center'>
-                    <span className='text-xs leading-7.5 text-neutral-300'>
-                      Genre
-                    </span>
-                    <span className='line-clamp-1 text-sm font-semibold leading-8.5 text-neutral-25'>
-                      {movie.genres[0]?.name ?? '—'}
-                    </span>
-                  </div>
-                </div>
-                <div className='flex flex-1 flex-col items-center gap-2 rounded-2xl border border-neutral-800 bg-black p-3'>
-                  <img
-                    src='/public/icons/emoji.svg'
-                    className='h-7 w-7 p-0.75'
-                  />
-                  <div className='flex flex-col gap-0.5 text-center'>
-                    <span className='text-xs leading-7.5 text-neutral-300'>
-                      Age Limit
-                    </span>
-                    <span className='text-sm font-semibold leading-8.5 text-neutral-25'>
-                      {certification}
-                    </span>
-                  </div>
-                </div>
+                <StatBox
+                  size='sm'
+                  icon={
+                    <StarBoldIcon className='h-7 w-7 fill-star text-star' />
+                  }
+                  label='Rating'
+                  value={`${movie.vote_average.toFixed(1)}/10`}
+                />
+                <StatBox
+                  size='sm'
+                  icon={
+                    <img
+                      src='/public/icons/video.svg'
+                      className='h-7 w-7 p-0.75'
+                    />
+                  }
+                  label='Genre'
+                  value={movie.genres[0]?.name ?? '—'}
+                />
+                <StatBox
+                  size='sm'
+                  icon={
+                    <img
+                      src='/public/icons/emoji.svg'
+                      className='h-7 w-7 p-0.75'
+                    />
+                  }
+                  label='Age Limit'
+                  value={certification}
+                />
               </div>
             </div>
           </div>
@@ -333,7 +318,7 @@ const MovieDetailPage = () => {
       {/* ── Cast Section ── */}
       <section className='pb-12 px-mobile-x py-10 md:px-10 lg:px-page-x'>
         <h2 className='mb-6 text-display-xs font-bold tracking-[-0.02em] text-neutral-25 md:mb-8 md:text-display-md'>
-          Top Cast
+          Cast & Crew
         </h2>
         {creditsLoading ? (
           <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
@@ -359,19 +344,21 @@ const MovieDetailPage = () => {
           Similar Movies
         </h2>
         {similarLoading ? (
-          <div className='flex gap-4 overflow-hidden md:gap-5'>
+          <div className='flex gap-4 md:gap-5'>
             {Array.from({ length: 5 }).map((_, i) => (
               <MovieCardSkeleton key={i} />
             ))}
           </div>
         ) : similarMovies.length > 0 ? (
-          <div className='flex gap-4 overflow-x-auto pb-2 md:gap-5 [&::-webkit-scrollbar]:hidden'>
+          <div className='flex gap-4 overflow-x-auto py-2 pb-4 md:gap-5 [&::-webkit-scrollbar]:hidden'>
             {similarMovies.map((movie) => (
               <MovieCard key={movie.id} movie={movie} />
             ))}
           </div>
         ) : (
-          <p className='text-sm text-neutral-500'>No recommendations available.</p>
+          <p className='text-sm text-neutral-500'>
+            No recommendations available.
+          </p>
         )}
       </section>
     </motion.div>

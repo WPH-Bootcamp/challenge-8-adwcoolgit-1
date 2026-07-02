@@ -242,12 +242,12 @@ const HomePage = () => {
                 </Button>
               </div>
             ) : (
-              <div className='relative overflow-hidden'>
+              <div className='relative overflow-x-clip'>
                 {/* Horizontal scroll row */}
                 <div
                   ref={trendingRef}
                   onScroll={handleTrendingScroll}
-                  className='flex gap-4 overflow-x-auto px-mobile-x pb-2 md:gap-5 md:px-page-x scrollbar-width:none [&::-webkit-scrollbar]:hidden'
+                  className='flex gap-4 overflow-x-auto px-mobile-x py-2 pb-4 md:gap-5 md:px-page-x [&::-webkit-scrollbar]:hidden'
                 >
                   {popularLoading
                     ? Array.from({ length: 10 }).map((_, i) => (

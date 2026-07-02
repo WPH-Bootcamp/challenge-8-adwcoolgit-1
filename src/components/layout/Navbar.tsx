@@ -3,6 +3,7 @@ import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, X, Menu, ArrowLeft } from 'lucide-react';
 import Logo from '@/components/layout/Logo';
 import SearchInput from '@/components/ui/SearchInput';
+import { useSavedStore } from '@/store/savedStore';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `text-md px-2 py-1 transition-colors text-neutral-25 ${isActive ? 'font-semibold' : 'opacity-70 hover:opacity-100'}`;
@@ -12,9 +13,12 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const savedCount = useSavedStore((s) => s.savedMovies.length);
 
   const searchMode = searchParams.has('focus') || !!searchParams.get('q');
-  const [mobileSearchQuery, setMobileSearchQuery] = useState(() => searchParams.get('q') ?? '');
+  const [mobileSearchQuery, setMobileSearchQuery] = useState(
+    () => searchParams.get('q') ?? ''
+  );
 
   const handleDesktopSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +56,14 @@ export default function Navbar() {
                 Home
               </NavLink>
               <NavLink to='/favourite' className={navLinkClass}>
-                Favourites
+                <span className='relative'>
+                  Favourites
+                  {savedCount > 0 && (
+                    <span className='absolute -right-5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand text-xs font-semibold text-white text-center'>
+                      {savedCount > 99 ? '99+' : savedCount}
+                    </span>
+                  )}
+                </span>
               </NavLink>
             </nav>
           </div>
@@ -137,7 +148,9 @@ export default function Navbar() {
               to='/'
               end
               onClick={() => setMobileOpen(false)}
-              className={({ isActive }) => (isActive ? 'font-semibold' : 'hover:text-neutral-25')}
+              className={({ isActive }) =>
+                isActive ? 'font-semibold' : 'hover:text-neutral-25'
+              }
             >
               Home
             </NavLink>
@@ -145,10 +158,19 @@ export default function Navbar() {
               to='/favourite'
               onClick={() => setMobileOpen(false)}
               className={({ isActive }) =>
-                isActive ? 'text-neutral-25' : 'text-neutral-100 hover:text-neutral-25'
+                isActive
+                  ? 'text-neutral-25'
+                  : 'text-neutral-100 hover:text-neutral-25'
               }
             >
-              Favourite
+              <span className='relative inline-flex items-center gap-2'>
+                Favourite
+                {savedCount > 0 && (
+                  <span className='flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1.5 text-xs font-semibold text-white'>
+                    {savedCount > 99 ? '99+' : savedCount}
+                  </span>
+                )}
+              </span>
             </NavLink>
           </nav>
         </div>

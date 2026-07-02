@@ -2,6 +2,7 @@ import { Outlet, useLocation, ScrollRestoration } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 
 const RootLayout = () => {
   const location = useLocation();
@@ -10,9 +11,11 @@ const RootLayout = () => {
       <ScrollRestoration />
       <Navbar />
       <main className='flex-1'>
-        <AnimatePresence mode='wait'>
-          <Outlet key={location.pathname} />
-        </AnimatePresence>
+        <ErrorBoundary key={location.pathname}>
+          <AnimatePresence mode='wait'>
+            <Outlet key={location.pathname} />
+          </AnimatePresence>
+        </ErrorBoundary>
       </main>
       <Footer />
     </div>
