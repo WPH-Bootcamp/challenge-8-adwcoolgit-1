@@ -107,7 +107,7 @@ const MovieListItem = ({ movie, sparation = false }: MovieListItemProps) => {
             className='hidden w-50 md:flex'
           >
             Watch Trailer
-            <img src='/public/icons/play.svg' alt='play' className='h-6 w-6' />
+            <img src='/icons/play.svg' alt='play' className='h-6 w-6' />
           </Button>
         </div>
       </div>

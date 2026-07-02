@@ -9,7 +9,7 @@ const EmptySavedState = () => (
       <div className='relative flex h-50 w-50 items-center justify-center'>
         {/* Image Film */}
         <img
-          src='/public/icons/film.svg'
+          src='/icons/film.svg'
           alt='film'
           className='w-38.25 h-42.5 text-neutral-900'
         />
