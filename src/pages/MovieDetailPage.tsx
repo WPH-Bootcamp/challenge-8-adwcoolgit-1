@@ -187,7 +187,7 @@ const MovieDetailPage = () => {
                       className='w-55'
                     >
                       Watch Trailer
-                      <img src='/public/icons/play.svg' className='h-6 w-6' />
+                      <img src='/icons/play.svg' className='h-6 w-6' />
                     </Button>
                   )}
                   <button
@@ -214,7 +214,7 @@ const MovieDetailPage = () => {
                   <StatBox
                     icon={
                       <img
-                        src='/public/icons/video.svg'
+                        src='/icons/video.svg'
                         className='h-8 w-8 p-0.75'
                       />
                     }
@@ -224,7 +224,7 @@ const MovieDetailPage = () => {
                   <StatBox
                     icon={
                       <img
-                        src='/public/icons/emoji.svg'
+                        src='/icons/emoji.svg'
                         className='h-8 w-8 p-0.75'
                       />
                     }
@@ -246,7 +246,7 @@ const MovieDetailPage = () => {
                   >
                     Watch Trailer
                     <img
-                      src='/public/icons/play.svg'
+                      src='/icons/play.svg'
                       className='h-5 w-5 fill-current'
                     />
                   </button>
@@ -279,7 +279,7 @@ const MovieDetailPage = () => {
                   size='sm'
                   icon={
                     <img
-                      src='/public/icons/video.svg'
+                      src='/icons/video.svg'
                       className='h-7 w-7 p-0.75'
                     />
                   }
@@ -290,7 +290,7 @@ const MovieDetailPage = () => {
                   size='sm'
                   icon={
                     <img
-                      src='/public/icons/emoji.svg'
+                      src='/icons/emoji.svg'
                       className='h-7 w-7 p-0.75'
                     />
                   }
